@@ -3,7 +3,7 @@ import json
 
 from django.http import HttpResponseNotFound
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from pokemon_entities.models import Pokemon, PokemonEntity
 
 
@@ -62,7 +62,7 @@ def show_all_pokemons(request):
 def show_pokemon(request, pokemon_id):
 
     try:
-        requested_pokemon = get_object_or_404(Pokemon, id=int(pokemon_id)
+        requested_pokemon = get_object_or_404(Pokemon, id=int(pokemon_id))
     except ObjectDoesNotExist:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
