@@ -2,6 +2,7 @@ import folium
 import json
 
 from django.http import HttpResponseNotFound
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from pokemon_entities.models import Pokemon, PokemonEntity
 
@@ -61,19 +62,19 @@ def show_all_pokemons(request):
 def show_pokemon(request, pokemon_id):
 
     try:
-        requested_pokemon = Pokemon.objects.get(id=int(pokemon_id))
-    except Exception:
+        requested_pokemon = get_object_or_404(Pokemon, id=int(pokemon_id)
+    except ObjectDoesNotExist:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
-    img_url = get_image_url_or_default(request, requested_pokemon.photo)
+    img_url=get_image_url_or_default(request, requested_pokemon.photo)
 
-    folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
+    folium_map=folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in requested_pokemon.pokemon_entities.all():
         add_pokemon(
             folium_map, pokemon_entity.lat, pokemon_entity.lon,
             requested_pokemon.title, img_url)
 
-    pokemon = {
+    pokemon={
         'title_ru': requested_pokemon.title,
         'img_url': img_url,
         'description': requested_pokemon.description,
@@ -83,19 +84,19 @@ def show_pokemon(request, pokemon_id):
 
     if requested_pokemon.previous_evolution:
 
-        pokemon['previous_evolution'] = {
+        pokemon['previous_evolution']={
             'title_ru': requested_pokemon.previous_evolution.title,
             'pokemon_id': requested_pokemon.previous_evolution.id,
             'img_url': get_image_url_or_default(
                 request, requested_pokemon.previous_evolution.photo
             ),
         }
-    next_evolution = None
+    next_evolution=None
 
-    next_evolution = requested_pokemon.next_evolutions.first()
+    next_evolution=requested_pokemon.next_evolutions.first()
 
     if next_evolution:
-        pokemon['next_evolution'] = {
+        pokemon['next_evolution']={
             'title_ru': next_evolution.title,
             'pokemon_id': next_evolution.id,
             'img_url': get_image_url_or_default(request, next_evolution.photo),

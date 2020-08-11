@@ -1,10 +1,7 @@
 from django.db import models
 
-# your models here
-
 
 class Pokemon(models.Model):
-    id = models.AutoField(auto_created=True, primary_key=True)
     title = models.TextField(verbose_name='имя')
     photo = models.ImageField(null=True, verbose_name='изображение')
     description = models.TextField(blank=True, verbose_name='описание')
@@ -13,20 +10,16 @@ class Pokemon(models.Model):
     title_jp = models.CharField(
         max_length=200, blank=True, verbose_name='имя на японском')
 
-    # Relationships
     previous_evolution = models.ForeignKey(
         'self', on_delete=models.SET_NULL, null=True, blank=True,
         related_name='next_evolutions', verbose_name='предыдущее превращение'
     )
 
     def __str__(self):
-        return '{}'.format(self.title)
+        return self.title
 
 
 class PokemonEntity(models.Model):
-    id = models.AutoField(auto_created=True, primary_key=True)
-
-    # Relationships
     pokemon = models.ForeignKey(
         Pokemon, on_delete=models.CASCADE,
         related_name='pokemon_entities',
