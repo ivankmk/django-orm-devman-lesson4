@@ -63,7 +63,7 @@ def show_pokemon(request, pokemon_id):
 
     try:
         requested_pokemon = get_object_or_404(Pokemon, id=int(pokemon_id))
-    except ObjectDoesNotExist:
+    except Pokemon.DoesNotExist:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
     img_url=get_image_url_or_default(request, requested_pokemon.photo)
